@@ -4,6 +4,7 @@ let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
+let clearBtn;
 let noteList;
 
 // Check if the current window path is '/notes' and set up the form elements.
@@ -37,11 +38,7 @@ const getNotes = () =>
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(response => response.json())
-    .then(data => {
-      console.log("Fetched notes:", data);
-      return data;
-    });
+  }).then(response => response.json());
 
 // Function to save a new note to the server.
 const saveNote = (note) =>
@@ -51,7 +48,7 @@ const saveNote = (note) =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(note)
-  });
+  }).then(response => response.json());
 
 // Function to delete a note from the server.
 const deleteNote = (id) =>
@@ -67,7 +64,6 @@ const renderActiveNote = () => {
   hide(saveNoteBtn);
   hide(clearBtn);
 
-  // If there is an active note, make the fields read-only and display the note title and text.
   if (activeNote.id) {
     show(newNoteBtn);
     noteTitle.setAttribute('readonly', true);
@@ -75,7 +71,6 @@ const renderActiveNote = () => {
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
   } else {
-    // Otherwise, make the fields editable and empty.
     hide(newNoteBtn);
     noteTitle.removeAttribute('readonly');
     noteText.removeAttribute('readonly');
@@ -91,7 +86,6 @@ const handleNoteSave = () => {
     text: noteText.value
   };
 
-  // Save the note and refresh the list.
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -105,7 +99,6 @@ const handleNoteDelete = (e) => {
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
 
-  // Delete the note and refresh the list.
   if (activeNote.id === noteId) {
     activeNote = {};
   }
@@ -132,19 +125,18 @@ const handleNewNoteView = (e) => {
 
 // Function to show or hide the save and clear buttons based on form state.
 const handleRenderBtns = () => {
-  show(clearBtn);
   if (!noteTitle.value.trim() && !noteText.value.trim()) {
-    hide(clearBtn);
-  } else if (!noteTitle.value.trim() || !noteText.value.trim()) {
     hide(saveNoteBtn);
+    hide(clearBtn);
   } else {
     show(saveNoteBtn);
+    show(clearBtn);
   }
 };
 
 // Function to render the list of note titles.
 const renderNoteList = async (notes) => {
-  let jsonNotes = await notes.json();
+  let jsonNotes = await notes;
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
@@ -181,7 +173,6 @@ const renderNoteList = async (notes) => {
     return liEl;
   };
 
-  // Create a list item for each note and add to the list.
   if (jsonNotes.length === 0) {
     noteListItems.push(createLi('No saved Notes', false));
   }
@@ -193,7 +184,6 @@ const renderNoteList = async (notes) => {
     noteListItems.push(li);
   });
 
-  // Append the list items to the note list container.
   if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
