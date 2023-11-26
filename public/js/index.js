@@ -37,7 +37,11 @@ const getNotes = () =>
     headers: {
       'Content-Type': 'application/json'
     }
-  });
+  }).then(response => response.json())
+    .then(data => {
+      console.log("Fetched notes:", data);
+      return data;
+    });
 
 // Function to save a new note to the server.
 const saveNote = (note) =>
