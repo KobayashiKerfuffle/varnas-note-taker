@@ -1,13 +1,13 @@
+console.log('index.js is loaded');
+
 // Declare variables to hold references to form elements.
 let noteForm;
 let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
-let clearBtn;
 let noteList;
 
-// Check if the current window path is '/notes' and set up the form elements.
 if (window.location.pathname === '/notes') {
   noteForm = document.querySelector('.note-form');
   noteTitle = document.querySelector('.note-title');
@@ -16,31 +16,32 @@ if (window.location.pathname === '/notes') {
   newNoteBtn = document.querySelector('.new-note');
   clearBtn = document.querySelector('.clear-btn');
   noteList = document.querySelectorAll('.list-container .list-group');
+
+  console.log('Form elements set up');
 }
 
-// Function to show an HTML element.
 const show = (elem) => {
   elem.style.display = 'inline';
 };
 
-// Function to hide an HTML element.
 const hide = (elem) => {
   elem.style.display = 'none';
 };
 
-// Object to keep track of the currently active note (displayed in the right-hand column).
 let activeNote = {};
 
-// Function to fetch notes from the server.
 const getNotes = () =>
   fetch('/api/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(response => response.json());
+  }).then(response => response.json())
+    .then(data => {
+      console.log('Fetched notes:', data);
+      return data;
+    });
 
-// Function to save a new note to the server.
 const saveNote = (note) =>
   fetch('/api/notes', {
     method: 'POST',
@@ -50,7 +51,6 @@ const saveNote = (note) =>
     body: JSON.stringify(note)
   }).then(response => response.json());
 
-// Function to delete a note from the server.
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
     method: 'DELETE',
@@ -59,7 +59,6 @@ const deleteNote = (id) =>
     }
   });
 
-// Function to display the active note in the right-hand column.
 const renderActiveNote = () => {
   hide(saveNoteBtn);
   hide(clearBtn);
@@ -79,7 +78,6 @@ const renderActiveNote = () => {
   }
 };
 
-// Function to handle save button click.
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
@@ -92,7 +90,6 @@ const handleNoteSave = () => {
   });
 };
 
-// Function to handle delete button click on a note.
 const handleNoteDelete = (e) => {
   e.stopPropagation();
 
@@ -109,21 +106,18 @@ const handleNoteDelete = (e) => {
   });
 };
 
-// Function to display a clicked note.
 const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
   renderActiveNote();
 };
 
-// Function to set up the form for entering a new note.
 const handleNewNoteView = (e) => {
   activeNote = {};
   show(clearBtn);
   renderActiveNote();
 };
 
-// Function to show or hide the save and clear buttons based on form state.
 const handleRenderBtns = () => {
   if (!noteTitle.value.trim() && !noteText.value.trim()) {
     hide(saveNoteBtn);
@@ -134,16 +128,14 @@ const handleRenderBtns = () => {
   }
 };
 
-// Function to render the list of note titles.
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes;
-  if (window.location.pathname === '/notes') {
-    noteList.forEach((el) => (el.innerHTML = ''));
-  }
+  console.log('Rendering notes:', jsonNotes);
+
+  noteList.forEach((el) => (el.innerHTML = ''));
 
   let noteListItems = [];
 
-  // Function to create a list item for a note.
   const createLi = (text, delBtn = true) => {
     const liEl = document.createElement('li');
     liEl.classList.add('list-group-item');
@@ -155,7 +147,6 @@ const renderNoteList = async (notes) => {
 
     liEl.append(spanEl);
 
-    // Optionally add a delete button.
     if (delBtn) {
       const delBtnEl = document.createElement('i');
       delBtnEl.classList.add(
@@ -189,10 +180,11 @@ const renderNoteList = async (notes) => {
   }
 };
 
-// Function to get and render notes from the server.
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndRenderNotes = () => {
+  console.log('getAndRenderNotes called');
+  getNotes().then(renderNoteList);
+};
 
-// Event listeners for the buttons on the notes page.
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
   newNoteBtn.addEventListener('click', handleNewNoteView);
@@ -200,5 +192,4 @@ if (window.location.pathname === '/notes') {
   noteForm.addEventListener('input', handleRenderBtns);
 }
 
-// Initial call to get and render notes.
 getAndRenderNotes();
