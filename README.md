@@ -57,7 +57,7 @@ To use the application, follow these steps:
 ## Links
 
 - Click here for the [Github Repo](https://github.com/KobayashiKerfuffle/varnas-note-taker.git).
-- Click here for the [Github Page]().
+- Click here for the [Github Page](https://kobayashikerfuffle.github.io/varnas-note-taker/).
 
 ## Contributing
 
