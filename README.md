@@ -58,6 +58,7 @@ To use the application, follow these steps:
 
 - Click here for the [Github Repo](https://github.com/KobayashiKerfuffle/varnas-note-taker.git).
 - Click here for the [Github Page](https://kobayashikerfuffle.github.io/varnas-note-taker/).
+- Click here for the [Heroku Deployed](https://varnas-note-taker-22748477960b.herokuapp.com/).
 
 ## Contributing
 
