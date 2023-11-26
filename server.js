@@ -46,6 +46,29 @@ app.post('/api/notes', (req, res) => {
   });
 });
 
+// API route to DELETE a note by id
+app.delete('/api/notes/:id', (req, res) => {
+  const noteId = req.params.id;
+
+  fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error reading notes' });
+    }
+
+    let notes = JSON.parse(data);
+    notes = notes.filter(note => note.id !== noteId);
+
+    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes, null, 2), (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Error writing note' });
+      }
+      res.json({ message: 'Note deleted' });
+    });
+  });
+});
+
 // HTML route to serve notes.html from the public directory
 app.get('/notes', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'notes.html'));

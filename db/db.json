@@ -1,17 +1,17 @@
 [
   {
-    "id": "1",
-    "title": "Sample Note",
-    "text": "This is an example note."
+    "title": "Test note #1",
+    "text": "This is a test note to make sure that the system is working.",
+    "id": "e43c916b-124c-49b6-9f01-d34d7425f665"
   },
   {
-    "id": "2",
-    "title": "Another Note",
-    "text": "This is another sample note."
+    "title": "Test note #2",
+    "text": "This is also a test note.",
+    "id": "2a6f1143-887e-4854-8b9e-fa725751e1c1"
   },
   {
-    "title": "This is my note title.",
-    "text": "This is the new text blah blah.",
-    "id": "634d7b67-89dc-4d6f-8bb1-3d88990bbcfd"
+    "title": "Test note #3",
+    "text": "This is a 3rd test note.",
+    "id": "1511c7a4-cbe4-4796-a800-cdb0b8d3da16"
   }
 ]
