@@ -10,12 +10,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files. Adjust if you have static assets like CSS or client-side JS
-app.use(express.static('public')); 
+// Serve static files from 'public' directory
+app.use(express.static('public'));
 
 // API route to GET all notes
 app.get('/api/notes', (req, res) => {
-  fs.readFile('./db/db.json', 'utf8', (err, data) => {
+  fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: 'Error reading notes' });
@@ -28,7 +28,7 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
   const newNote = { ...req.body, id: uuidv4() };
 
-  fs.readFile('./db/db.json', 'utf8', (err, data) => {
+  fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: 'Error reading notes' });
@@ -36,7 +36,7 @@ app.post('/api/notes', (req, res) => {
     const notes = JSON.parse(data);
     notes.push(newNote);
 
-    fs.writeFile('./db/db.json', JSON.stringify(notes, null, 2), (err) => {
+    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes, null, 2), (err) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ message: 'Error writing note' });
@@ -46,14 +46,14 @@ app.post('/api/notes', (req, res) => {
   });
 });
 
-// HTML route to serve notes.html from the root directory
+// HTML route to serve notes.html from the public directory
 app.get('/notes', (req, res) => {
-  res.sendFile(path.join(__dirname, 'notes.html'));
+  res.sendFile(path.join(__dirname, 'public', 'notes.html'));
 });
 
-// HTML route to serve index.html for all other paths from the root directory
+// HTML route to serve index.html for all other paths from the public directory
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server
